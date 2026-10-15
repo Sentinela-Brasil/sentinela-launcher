@@ -1,5 +1,11 @@
 # Sentinela Launcher
 
+> **In English:** A lightweight Python launcher for managing Proton/UMU and Cemu
+> game execution on Linux, with configurable paths and optional integration with the
+> Sentinela environment. Designed to keep system-specific configuration separate from
+> the launcher code, making the project easier to adapt to other Linux installations.
+> *Documentation: Portuguese (Brazilian).*
+
 Launcher de jogos para Linux (X11) focado em **integrar com o projeto Sentinela**:
 prepara o ambiente do Wine/Proton (via [UMU](https://github.com/Open-Wine-Components/umu-launcher))
 ou do Cemu (nativo), liga a camada de coleta de FPS e inicia o jogo.
@@ -16,14 +22,31 @@ ele, o coletor não tem como ligar sozinho no arranque de cada jogo.
 
 Sem dependências externas — só a biblioteca padrão do Python 3.
 
-## Requisitos
+## Requisitos e dependências
+
+**Básicos (para rodar o launcher):**
 
 - Linux com **X11** (testado no Fedora 44 / Xfce)
-- Python 3
-- [UMU](https://github.com/Open-Wine-Components/umu-launcher) + um Proton instalado
-- Para o `guardiao_games.py`: `xrandr`, `xfdesktop` e `gio`
-- Opcional: serviço `systemd --user` chamado `sentinela` (ligado automaticamente
-  pelo launcher, se existir)
+- Python 3 (apenas a biblioteca padrão)
+
+**Da execução (dependem do modo):**
+
+- Modo Windows/Proton: [UMU](https://github.com/Open-Wine-Components/umu-launcher)
+  + um Proton instalado
+- Modo nativo (Cemu): o AppImage do Cemu (ver `SENTINELA_CEMU`)
+- `guardiao_games.py`: `xrandr`, `xfdesktop` e `gio`
+
+**Integrações opcionais (NÃO vêm no clone):**
+
+Clonar o repositório **não** instala nem disponibiliza estes componentes — eles
+fazem parte do ambiente Sentinela ou da tua máquina. O launcher **degrada sem
+bloquear** quando faltam:
+
+- **Layer de FPS** (`SENTINELA_FPS_DIR`): só é ativada se a pasta existir; se não
+  existir, é simplesmente ignorada e o jogo roda sem a coleta de FPS.
+- **Serviço `systemd --user` `sentinela`**: se não existir ou falhar ao iniciar, o
+  launcher **segue e inicia o jogo normalmente**. A chamada de start usa `check=False`
+  e nada no fluxo depende do resultado dela.
 
 ## Uso
 
@@ -74,6 +97,9 @@ Name=Nome do Jogo
 Exec=/usr/bin/env PROTON_MEDIA_USE_GST=1 /home/USUARIO/sentinela-launcher/sentinela_launcher.py "/caminho/Jogo.exe" "Nome do Jogo"
 Terminal=false
 ```
+
+> No exemplo, `/home/USUARIO/sentinela-launcher/...` é **ilustrativo**: troca pelo
+> caminho onde clonaste o repositório.
 
 ## Guardião (`guardiao_games.py`)
 
